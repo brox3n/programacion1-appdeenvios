@@ -1,11 +1,27 @@
 #Función que será utilizada para arrancar el programa
-
+####IMPORTS
 import os 
 import modulo_funciones as f 
 
-def main():
-    pass
+##FUNCIONES
 
+def nombresparticipantes():
+    print("bienvenido a nuestra app de envios!!!!!!")
+    print("----------------------------------------------------")
+    print("los creadores de esta app son los siguientes: ")
+    print("----------------------------------------------------")
+    print("* Bruno Forastiero")
+    print("----------------------------------------------------")
+    print("* Matías Laino")
+    print("----------------------------------------------------")
+    print("* Santiago Peralta")
+    print("----------------------------------------------------")
+    print("* Francisco Pettis")
+    print("----------------------------------------------------")
+    print("* Pedro Marzano")
+    print("----------------------------------------------------")
+    print("Espero que disfrutes mucho la app!!")
+    print("----------------------------------------------------")
 
 
 def menu():
@@ -20,10 +36,9 @@ def menu():
             activar=int(input("ingrese un numero: "))
         
             if activar==1: 
-                def mostrarequipo():
-                    pass
+                nombresparticipantes():
             elif activar==2: 
-                def mostrarsistema():
+                def mostrardescripcion():
                     pass
             elif activar==3:
                 def ejecutar():
@@ -37,6 +52,23 @@ def menu():
             print("error ")
             input()
 
-    
-    if __name__=="__main__":
+
+
+
+
+
+
+
+
+
+#### PROGRAMA PRINCIPAL
+def main():
+nombresparticipantes()
+menu()
+
+
+
+
+
+if __name__=="__main__":
     main()
