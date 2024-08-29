@@ -5,8 +5,7 @@ import modulo_funciones as f
 
 def main():
     pass
-if __name__=="__main__":
-    main()
+
 
 
 def menu():
@@ -37,4 +36,7 @@ def menu():
         except:
             print("error ")
             input()
+
     
+    if __name__=="__main__":
+    main()
