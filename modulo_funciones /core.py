@@ -22,6 +22,7 @@ def nombresparticipantes():
     print("----------------------------------------------------")
     print("Espero que disfrutes mucho la app!!")
     print("----------------------------------------------------")
+    input()
 
 
 def menu():
@@ -36,7 +37,7 @@ def menu():
             activar=int(input("ingrese un numero: "))
         
             if activar==1: 
-                nombresparticipantes():
+                nombresparticipantes()
             elif activar==2: 
                 def mostrardescripcion():
                     pass
@@ -53,18 +54,10 @@ def menu():
             input()
 
 
-
-
-
-
-
-
-
-
 #### PROGRAMA PRINCIPAL
 def main():
-nombresparticipantes()
-menu()
+    menu()
+    nombresparticipantes()   
 
 
 
