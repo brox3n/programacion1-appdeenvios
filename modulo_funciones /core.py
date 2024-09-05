@@ -24,13 +24,18 @@ def nombresparticipantes():
     print("----------------------------------------------------")
     input()
 
+def descripcion():
+    print("----------------------------------------------------")
+    print("Esta es una app de envios realizada por estudiantes de  la carrera licenciatura en gestion de la tecnologia de la informacion. la cual es capaz de realizar la gestion de envios y pedidos entre los usuarios y los comercios gastronomicos. Esperamos que esta app sea de su agrado y pueda disfrutarla al maximo!!")
+    print("----------------------------------------------------")
+    input()
 
 def menu():
     repetir=True
     while repetir:
         os.system("cls")
         print("1 - equipo")
-        print("2 - sistemas")
+        print("2 - descripcion del proyecto")
         print("3 - ejecutar")
         print("4 - salir")
         try:
@@ -39,8 +44,7 @@ def menu():
             if activar==1: 
                 nombresparticipantes()
             elif activar==2: 
-                def mostrardescripcion():
-                    pass
+                descripcion()
             elif activar==3:
                 def ejecutar():
                     pass
