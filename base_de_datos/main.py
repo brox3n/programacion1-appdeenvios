@@ -1,4 +1,4 @@
-import modulo.
+import modulo_funciones
 
 def main ()
   pass
