@@ -1,7 +1,6 @@
 #Función que será utilizada para arrancar el programa
 ####IMPORTS
 import os 
-import modulo_funciones as f 
 
 ##FUNCIONES
 
@@ -58,14 +57,3 @@ def menu():
             input()
 
 
-#### PROGRAMA PRINCIPAL
-def main():
-    menu()
-    nombresparticipantes()   
-
-
-
-
-
-if __name__=="__main__":
-    main()
