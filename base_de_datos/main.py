@@ -2,7 +2,9 @@ import modulo_funciones as f
 
 def main():
     menu()
-    nombresparticipantes()   
+    nombresparticipantes()
+    descripcion()
+    ejecutar()
 
 
 
