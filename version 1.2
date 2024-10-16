@@ -1,1 +1,213 @@
+import os
 
+
+def guardar_en_archivo(envios):
+    with open("registro_envios.txt", "w") as archivo:
+        for envio in envios:
+            archivo.write(f"{envio['id']},{envio['destino']},{envio['peso']},{envio['fecha']}\n")
+
+
+def cargar_envios_desde_archivo():
+    envios = []
+    try:
+        with open("registro_envios.txt", "r") as archivo:
+            for linea in archivo:
+                id_envio, destino, peso, fecha = linea.strip().split(',')
+                envios.append({
+                    'id': int(id_envio),
+                    'destino': destino,
+                    'peso': float(peso),
+                    'fecha': fecha
+                })
+    except FileNotFoundError:
+        pass  
+    return envios
+
+
+def ver_registro_envios():
+    envios = cargar_envios_desde_archivo()
+    if envios:
+        for envio in envios:
+            print(envio)
+    else:
+        print("No hay envíos registrados en el archivo.")
+
+
+def modificar_envio_en_archivo():
+    envios = cargar_envios_desde_archivo()
+    id_envio = int(input("Ingrese el ID del envío que desea modificar: "))
+    
+    for envio in envios:
+        if envio['id'] == id_envio:
+            nuevo_destino = input("Ingrese el nuevo destino del envío: ")
+            nuevo_peso = float(input("Ingrese el nuevo peso del envío (en kg): "))
+            nueva_fecha = input("Ingrese la nueva fecha del envío (YYYY-MM-DD): ")
+            
+            envio['destino'] = nuevo_destino
+            envio['peso'] = nuevo_peso
+            envio['fecha'] = nueva_fecha
+            print(f"Envío actualizado: {envio}")
+            guardar_en_archivo(envios)  
+            return
+    print("Envío no encontrado")
+
+
+def eliminar_envio_del_archivo():
+    envios = cargar_envios_desde_archivo()
+    id_envio = int(input("Ingrese el ID del envío que desea eliminar: "))
+    
+    for envio in envios:
+        if envio['id'] == id_envio:
+            envios.remove(envio)
+            print(f"Envío con ID {id_envio} eliminado")
+            guardar_en_archivo(envios)  
+            return
+    print(f"No se encontró ningún envío con ID {id_envio}")
+
+
+def ejecutar():
+    envios = cargar_envios_desde_archivo()  
+
+    def crear_envio():
+        destino = input("Ingrese el destino del envío: ")
+        peso = float(input("Ingrese el peso del envío (en kg): "))
+        fecha = input("Ingrese la fecha del envío (YYYY-MM-DD): ")
+        
+        nuevo_envio = {
+            'id': len(envios) + 1,
+            'destino': destino,
+            'peso': peso,
+            'fecha': fecha
+        }
+        envios.append(nuevo_envio)
+        print(f"Envío creado: {nuevo_envio}")
+        guardar_en_archivo(envios)  
+
+    def obtener_envios():
+        if envios:
+            for envio in envios:
+                print(envio)
+        else:
+            print("No hay envíos registrados")
+
+    def obtener_envio_por_id():
+        id_envio = int(input("Ingrese el ID del envío que desea buscar: "))
+        for envio in envios:
+            if envio['id'] == id_envio:
+                print(envio)
+                return
+        print("Envío no encontrado")
+
+    def actualizar_envio():
+        id_envio = int(input("Ingrese el ID del envío que desea actualizar: "))
+        for envio in envios:
+            if envio['id'] == id_envio:
+                nuevo_destino = input("Ingrese el nuevo destino del envío: ")
+                nuevo_peso = float(input("Ingrese el nuevo peso del envío (en kg): "))
+                nueva_fecha = input("Ingrese la nueva fecha del envío (YYYY-MM-DD): ")
+                
+                envio['destino'] = nuevo_destino
+                envio['peso'] = nuevo_peso
+                envio['fecha'] = nueva_fecha
+                print(f"Envío actualizado: {envio}")
+                guardar_en_archivo(envios)  
+                return
+        print("Envío no encontrado")
+
+    def eliminar_envio():
+        id_envio = int(input("Ingrese el ID del envío que desea eliminar: "))
+        for envio in envios:
+            if envio['id'] == id_envio:
+                envios.remove(envio)
+                print(f"Envío con ID {id_envio} eliminado")
+                guardar_en_archivo(envios)  
+                return
+        print(f"No se encontró ningún envío con ID {id_envio}")
+
+    def menu():
+        activo = True
+        while activo:
+            os.system("cls")  # os.system("clear") para mac
+            print("\n=== Sistema de Gestión de Envíos ===")
+            print("1. Crear un nuevo envío")
+            print("2. Ver todos los envíos")
+            print("3. Buscar un envío por ID")
+            print("4. Actualizar un envío por ID")
+            print("5. Eliminar un envío por ID")
+            print("6. Salir")
+            
+            opcion = input("Seleccione una opción (1-6): ")
+            
+            if opcion == '1':
+                crear_envio()
+            elif opcion == '2':
+                obtener_envios()
+            elif opcion == '3':
+                obtener_envio_por_id()
+            elif opcion == '4':
+                actualizar_envio()
+            elif opcion == '5':
+                eliminar_envio()
+            elif opcion == '6':
+                print("Saliendo del programa...")
+                activo = False
+            else:
+                print("Opción no válida. Inténtelo de nuevo.")
+            input()
+
+    menu()
+
+
+def menu():
+    repetir = True
+    while repetir:
+        os.system("cls")  # os.system("clear") para mac
+        print("1 - Equipo")
+        print("2 - Descripción del proyecto")
+        print("3 - Ejecutar")
+        print("4 - Salir")
+        try:
+            activar = int(input("Ingrese un número: "))
+        
+            if activar == 1: 
+                nombresparticipantes()
+            elif activar == 2: 
+                descripcion()
+            elif activar == 3:
+                ejecutar()
+            elif activar == 4:
+                repetir = False 
+            else:
+                print("Número Erroneo ")
+                input()
+        except:
+            print("Error ")
+            input()
+
+
+def nombresparticipantes():
+    print("Bienvenido a nuestra app de envíos!!!!!!")
+    print("----------------------------------------------------")
+    print("los creadores de esta app son los siguientes: ")
+    print("----------------------------------------------------")
+    print("* Bruno Forastiero")
+    print("* Matías Laino")
+    print("* Santiago Peralta")
+    print("* Francisco Pettis")
+    print("* Pedro Marzano")
+    print("----------------------------------------------------")
+    print("Espero que disfrutes mucho la app!!")
+    print("----------------------------------------------------")
+    input()
+
+
+def descripcion():
+    print("----------------------------------------------------")
+    print("Esta es una app de envíos realizada por estudiantes de la carrera licenciatura en sistemas de la UADE.")
+    print("La app permite gestionar el envío de paquetes, y llevar un control de todos los registros de envíos realizados.")
+    print("Incluye funcionalidades para crear, buscar, modificar y eliminar envíos.")
+    print("----------------------------------------------------")
+    input()
+
+
+menu()
