@@ -1,1 +1,254 @@
+import json
+import os
 
+
+CLAVE_ADMIN_PREDEFINIDA = "supersecret123"
+
+
+def cargar_usuarios():
+    try:
+        with open("usuarios.json", "r") as archivo:
+            datos = json.load(archivo)
+            return datos["usuarios"]
+    except FileNotFoundError:
+        return []
+
+
+def guardar_usuarios(usuarios):
+    with open("usuarios.json", "w") as archivo:
+        json.dump({"usuarios": usuarios}, archivo, indent=4)
+
+
+def registrar_usuario():
+    usuarios = cargar_usuarios()
+    
+    nombre = input("Introduce el nombre de usuario: ")
+    
+    
+    for u in usuarios:
+        if u["nombre"] == nombre:
+            print("El nombre de usuario ya existe. Elige otro.")
+            return None  
+    
+    password = input("Introduce la contraseña: ")
+    rol = input("¿Quieres ser 'admin' o 'cliente'? ").lower()
+    
+    
+    if rol == "admin":
+        clave_admin = input("Introduce la clave de administrador: ")
+        if clave_admin != CLAVE_ADMIN_PREDEFINIDA:
+            print("Clave de administrador incorrecta. Registro fallido.")
+            return None  
+
+    
+    nuevo_usuario = {
+        "nombre": nombre,
+        "password": password,
+        "rol": rol
+    }
+    usuarios.append(nuevo_usuario)
+    guardar_usuarios(usuarios)
+    print(f"Registro exitoso. Te has registrado como {rol}.")
+    return nuevo_usuario 
+
+
+def login():
+    usuarios = cargar_usuarios()
+    
+    
+    usuario = input("Nombre de usuario: ")
+    password = input("Contraseña: ")
+    
+    
+    for u in usuarios:
+        if u["nombre"] == usuario and u["password"] == password:
+            return u 
+    print("Usuario o contraseña incorrectos.")
+    return None  
+
+
+def mostrar_opciones(usuario):
+    if usuario["rol"] == "admin":
+        print("Bienvenido administrador. Puedes gestionar todos los envíos.")
+    elif usuario["rol"] == "cliente":
+        print(f"Bienvenido {usuario['nombre']}. Puedes gestionar tus envíos.")
+
+
+def cargarenviosdesdearchivo():
+    envios = []
+    try:
+        with open("registro_envios.txt", "r") as archivo:
+            for linea in archivo:
+                id_envio, destino, peso, fecha = linea.strip().split(',')
+                envios.append({
+                    'id': int(id_envio),
+                    'destino': destino,
+                    'peso': float(peso),
+                    'fecha': fecha
+                })
+    except FileNotFoundError:
+        pass  
+    return envios
+
+
+def guardarenarchivo(envios):
+    with open("registro_envios.txt", "w") as archivo:
+        for envio in envios:
+            archivo.write(f"{envio['id']},{envio['destino']},{envio['peso']},{envio['fecha']}\n")
+
+
+def ejecutar(usuario):
+    envios = cargarenviosdesdearchivo()  
+
+    def crearenvio():
+        destino = input("Ingrese el destino del envío: ")
+        peso = float(input("Ingrese el peso del envío (en kg): "))
+        fecha = input("Ingrese la fecha del envío (YYYY-MM-DD): ")
+        
+        nuevo_envio = {
+            'id': len(envios) + 1,
+            'destino': destino,
+            'peso': peso,
+            'fecha': fecha
+        }
+        envios.append(nuevo_envio)
+        print(f"Envío creado: {nuevo_envio}")
+        guardarenarchivo(envios)  
+
+    def obtenerenvios():
+        if envios:
+            for envio in envios:
+                print(envio)
+        else:
+            print("No hay envíos registrados")
+
+    def obtenerenvioporid():
+        id_envio = int(input("Ingrese el ID del envío que desea buscar: "))
+        for envio in envios:
+            if envio['id'] == id_envio:
+                print(envio)
+                return
+        print("Envío no encontrado")
+
+    def actualizarenvio():
+        id_envio = int(input("Ingrese el ID del envío que desea actualizar: "))
+        for envio in envios:
+            if envio['id'] == id_envio:
+                nuevo_destino = input("Ingrese el nuevo destino del envío: ")
+                nuevo_peso = float(input("Ingrese el nuevo peso del envío (en kg): "))
+                nueva_fecha = input("Ingrese la nueva fecha del envío (YYYY-MM-DD): ")
+                
+                envio['destino'] = nuevo_destino
+                envio['peso'] = nuevo_peso
+                envio['fecha'] = nueva_fecha
+                print(f"Envío actualizado: {envio}")
+                guardarenarchivo(envios)  
+                return
+        print("Envío no encontrado")
+
+    def eliminarenvio():
+        id_envio = int(input("Ingrese el ID del envío que desea eliminar: "))
+        for envio in envios:
+            if envio['id'] == id_envio:
+                envios.remove(envio)
+                print(f"Envío con ID {id_envio} eliminado")
+                guardarenarchivo(envios)  
+                return
+        print(f"No se encontró ningún envío con ID {id_envio}")
+
+    def menu_envios():
+        activo = True
+        while activo:
+            os.system("cls")  # os.system("clear") para mac
+            print("\n=== Sistema de Gestión de Envíos ===")
+            print("1. Crear un nuevo envío")
+            if usuario["rol"] == "admin":
+                print("2. Ver todos los envíos")
+            print("3. Buscar un envío por ID")
+            print("4. Actualizar un envío por ID")
+            print("5. Eliminar un envío por ID")
+            print("6. Salir")
+            
+            opcion = input("Seleccione una opción (1-6): ")
+            
+            if opcion == '1':
+                crearenvio()
+            elif opcion == '2' and usuario["rol"] == "admin":
+                obtenerenvios()
+            elif opcion == '3':
+                obtenerenvioporid()
+            elif opcion == '4':
+                actualizarenvio()
+            elif opcion == '5':
+                eliminarenvio()
+            elif opcion == '6':
+                print("Saliendo del programa...")
+                activo = False
+            else:
+                print("Opción no válida o sin permisos. Inténtelo de nuevo.")
+            input()
+
+    menu_envios()
+
+
+def menu():
+    repetir = True
+    while repetir:
+        os.system("cls")  # os.system("clear") para mac
+        print("1 - Equipo")
+        print("2 - Descripción del proyecto")
+        print("3 - Ejecutar")
+        print("4 - Salir")
+        try:
+            activar = int(input("Ingrese un número: "))
+        
+            if activar == 1: 
+                nombresparticipantes()
+            elif activar == 2: 
+                descripcion()
+            elif activar == 3:
+                opcion_sesion = input("\nElija una opción:\n1. Registrarse\n2. Iniciar sesión\nSeleccione (1-2): ")
+                
+                if opcion_sesion == "1":
+                    usuario_registrado = registrar_usuario()
+                    if usuario_registrado:
+                        mostrar_opciones(usuario_registrado)
+                        ejecutar(usuario_registrado)  # Acceso al programa tras registrarse
+                elif opcion_sesion == "2":
+                    usuario_logeado = login()
+                    if usuario_logeado:
+                        mostrar_opciones(usuario_logeado)
+                        ejecutar(usuario_logeado)
+                    else:
+                        print("Error al iniciar sesión.")
+                else:
+                    print("Opción inválida.")
+            elif activar == 4:
+                repetir = False 
+            else:
+                print("Número Erróneo")
+                input()
+        except:
+            print("Error ")
+            input()
+
+def nombresparticipantes():
+    print("----------------------------------------------------")
+    print("los creadores de esta app son los siguientes: ")
+    print("----------------------------------------------------")
+    print("* Bruno Forastiero")
+    print("* Santiago Peralta")
+    print("* Francisco Pettis")
+    print("* Pedro Marzano")
+    print("----------------------------------------------------")
+    input()
+
+def descripcion():
+    print("----------------------------------------------------")
+    print("Esta es una app de envíos realizada por estudiantes de la UADE.")
+    print("La app permite gestionar el envío de paquetes, y llevar un control de todos los registros de envíos realizados.")
+    print("Incluye funcionalidades para crear, buscar, modificar y eliminar envíos.")
+    print("----------------------------------------------------")
+    input()
+
+menu()
