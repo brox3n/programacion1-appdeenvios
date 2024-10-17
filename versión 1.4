@@ -5,7 +5,7 @@ import os
 CLAVE_ADMIN_PREDEFINIDA = "supersecret123"
 
 
-def cargar_usuarios():
+def cargarUsuarios():
     try:
         with open("usuarios.json", "r") as archivo:
             datos = json.load(archivo)
@@ -14,13 +14,13 @@ def cargar_usuarios():
         return []
 
 
-def guardar_usuarios(usuarios):
+def guardarUsuarios(usuarios):
     with open("usuarios.json", "w") as archivo:
         json.dump({"usuarios": usuarios}, archivo, indent=4)
 
 
-def registrar_usuario():
-    usuarios = cargar_usuarios()
+def registrarUsuario():
+    usuarios = cargarUsuarios()
     
     nombre = input("Introduce el nombre de usuario: ")
     
@@ -35,25 +35,25 @@ def registrar_usuario():
     
     
     if rol == "admin":
-        clave_admin = input("Introduce la clave de administrador: ")
-        if clave_admin != CLAVE_ADMIN_PREDEFINIDA:
+        claveAdmin = input("Introduce la clave de administrador: ")
+        if claveAdmin != CLAVE_ADMIN_PREDEFINIDA:
             print("Clave de administrador incorrecta. Registro fallido.")
             return None  
 
     
-    nuevo_usuario = {
+    nuevoUsuario = {
         "nombre": nombre,
         "password": password,
         "rol": rol
     }
-    usuarios.append(nuevo_usuario)
-    guardar_usuarios(usuarios)
+    usuarios.append(nuevoUsuario)
+    guardarUsuarios(usuarios)
     print(f"Registro exitoso. Te has registrado como {rol}.")
-    return nuevo_usuario 
+    return nuevoUsuario 
 
 
 def login():
-    usuarios = cargar_usuarios()
+    usuarios = cargarUsuarios()
     
     
     usuario = input("Nombre de usuario: ")
@@ -67,21 +67,21 @@ def login():
     return None  
 
 
-def mostrar_opciones(usuario):
+def mostrarOpciones(usuario):
     if usuario["rol"] == "admin":
         print("Bienvenido administrador. Puedes gestionar todos los envíos.")
     elif usuario["rol"] == "cliente":
         print(f"Bienvenido {usuario['nombre']}. Puedes gestionar tus envíos.")
 
 
-def cargarenviosdesdearchivo():
+def cargarEnviosDesdeArchivo():
     envios = []
     try:
         with open("registro_envios.txt", "r") as archivo:
             for linea in archivo:
-                id_envio, destino, peso, fecha = linea.strip().split(',')
+                idEnvio, destino, peso, fecha = linea.strip().split(',')
                 envios.append({
-                    'id': int(id_envio),
+                    'id': int(idEnvio),
                     'destino': destino,
                     'peso': float(peso),
                     'fecha': fecha
@@ -91,72 +91,72 @@ def cargarenviosdesdearchivo():
     return envios
 
 
-def guardarenarchivo(envios):
+def guardarEnArchivo(envios):
     with open("registro_envios.txt", "w") as archivo:
         for envio in envios:
             archivo.write(f"{envio['id']},{envio['destino']},{envio['peso']},{envio['fecha']}\n")
 
 
 def ejecutar(usuario):
-    envios = cargarenviosdesdearchivo()  
+    envios = cargarEnviosDesdeArchivo()  
 
-    def crearenvio():
+    def crearEnvio():
         destino = input("Ingrese el destino del envío: ")
         peso = float(input("Ingrese el peso del envío (en kg): "))
         fecha = input("Ingrese la fecha del envío (YYYY-MM-DD): ")
         
-        nuevo_envio = {
+        nuevoEnvio = {
             'id': len(envios) + 1,
             'destino': destino,
             'peso': peso,
             'fecha': fecha
         }
-        envios.append(nuevo_envio)
-        print(f"Envío creado: {nuevo_envio}")
-        guardarenarchivo(envios)  
+        envios.append(nuevoEnvio)
+        print(f"Envío creado: {nuevoEnvio}")
+        guardarEnArchivo(envios)  
 
-    def obtenerenvios():
+    def obtenerEnvios():
         if envios:
             for envio in envios:
                 print(envio)
         else:
             print("No hay envíos registrados")
 
-    def obtenerenvioporid():
-        id_envio = int(input("Ingrese el ID del envío que desea buscar: "))
+    def obtenerEnvioPorId():
+        idEnvio = int(input("Ingrese el ID del envío que desea buscar: "))
         for envio in envios:
-            if envio['id'] == id_envio:
+            if envio['id'] == idEnvio:
                 print(envio)
                 return
         print("Envío no encontrado")
 
-    def actualizarenvio():
-        id_envio = int(input("Ingrese el ID del envío que desea actualizar: "))
+    def actualizarEnvio():
+        idEnvio = int(input("Ingrese el ID del envío que desea actualizar: "))
         for envio in envios:
-            if envio['id'] == id_envio:
-                nuevo_destino = input("Ingrese el nuevo destino del envío: ")
-                nuevo_peso = float(input("Ingrese el nuevo peso del envío (en kg): "))
-                nueva_fecha = input("Ingrese la nueva fecha del envío (YYYY-MM-DD): ")
+            if envio['id'] == idEnvio:
+                nuevoDestino = input("Ingrese el nuevo destino del envío: ")
+                nuevoPeso = float(input("Ingrese el nuevo peso del envío (en kg): "))
+                nuevaFecha = input("Ingrese la nueva fecha del envío (YYYY-MM-DD): ")
                 
-                envio['destino'] = nuevo_destino
-                envio['peso'] = nuevo_peso
-                envio['fecha'] = nueva_fecha
+                envio['destino'] = nuevoDestino
+                envio['peso'] = nuevoPeso
+                envio['fecha'] = nuevaFecha
                 print(f"Envío actualizado: {envio}")
-                guardarenarchivo(envios)  
+                guardarEnArchivo(envios)  
                 return
         print("Envío no encontrado")
 
-    def eliminarenvio():
-        id_envio = int(input("Ingrese el ID del envío que desea eliminar: "))
+    def eliminarEnvio():
+        idEnvio = int(input("Ingrese el ID del envío que desea eliminar: "))
         for envio in envios:
-            if envio['id'] == id_envio:
+            if envio['id'] == idEnvio:
                 envios.remove(envio)
-                print(f"Envío con ID {id_envio} eliminado")
-                guardarenarchivo(envios)  
+                print(f"Envío con ID {idEnvio} eliminado")
+                guardarEnArchivo(envios)  
                 return
-        print(f"No se encontró ningún envío con ID {id_envio}")
+        print(f"No se encontró ningún envío con ID {idEnvio}")
 
-    def menu_envios():
+    def menuEnvios():
         activo = True
         while activo:
             os.system("cls")  # os.system("clear") para mac
@@ -172,15 +172,15 @@ def ejecutar(usuario):
             opcion = input("Seleccione una opción (1-6): ")
             
             if opcion == '1':
-                crearenvio()
+                crearEnvio()
             elif opcion == '2' and usuario["rol"] == "admin":
-                obtenerenvios()
+                obtenerEnvios()
             elif opcion == '3':
-                obtenerenvioporid()
+                obtenerEnvioPorId()
             elif opcion == '4':
-                actualizarenvio()
+                actualizarEnvio()
             elif opcion == '5':
-                eliminarenvio()
+                eliminarEnvio()
             elif opcion == '6':
                 print("Saliendo del programa...")
                 activo = False
@@ -188,7 +188,7 @@ def ejecutar(usuario):
                 print("Opción no válida o sin permisos. Inténtelo de nuevo.")
             input()
 
-    menu_envios()
+    menuEnvios()
 
 
 def menu():
@@ -207,18 +207,18 @@ def menu():
             elif activar == 2: 
                 descripcion()
             elif activar == 3:
-                opcion_sesion = input("\nElija una opción:\n1. Registrarse\n2. Iniciar sesión\nSeleccione (1-2): ")
+                opcionSesion = input("\nElija una opción:\n1. Registrarse\n2. Iniciar sesión\nSeleccione (1-2): ")
                 
-                if opcion_sesion == "1":
-                    usuario_registrado = registrar_usuario()
-                    if usuario_registrado:
-                        mostrar_opciones(usuario_registrado)
-                        ejecutar(usuario_registrado) 
-                elif opcion_sesion == "2":
-                    usuario_logeado = login()
-                    if usuario_logeado:
-                        mostrar_opciones(usuario_logeado)
-                        ejecutar(usuario_logeado)
+                if opcionSesion == "1":
+                    usuarioRegistrado = registrarUsuario()
+                    if usuarioRegistrado:
+                        mostrarOpciones(usuarioRegistrado)
+                        ejecutar(usuarioRegistrado) 
+                elif opcionSesion == "2":
+                    usuarioLogeado = login()
+                    if usuarioLogeado:
+                        mostrarOpciones(usuarioLogeado)
+                        ejecutar(usuarioLogeado)
                     else:
                         print("Error al iniciar sesión.")
                 else:
