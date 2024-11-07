@@ -92,6 +92,25 @@ def calcularCostoEnvio(origen, destino, peso, costo=0):
     costo_total = distancia_costo + (peso * costo_por_kg)
     return costo_total
 
+archivo_id = "ultimo_id.txt"
+
+def obtener_ultimo_id():
+    usuarios = cargarUsuarios()
+    ultimo_id = 0
+
+    for usuario in usuarios:
+        if "envios" in usuario:
+            ids_envios = [envio["id"] for envio in usuario["envios"]]
+            if ids_envios:
+                max_id = max(ids_envios)
+                if max_id > ultimo_id:
+                    ultimo_id = max_id
+
+    return ultimo_id
+
+def actualizar_id(nuevo_id):
+    with open(archivo_id, "w") as file:
+        file.write(str(nuevo_id))
 
 def crearEnvio():
     destino = 0
@@ -123,8 +142,11 @@ def crearEnvio():
     comuna_origen = usuario_actual["comuna"]
     costo_envio = calcularCostoEnvio(comuna_origen, destino, peso)
 
+    ultimo_id = obtener_ultimo_id()
+    nuevo_id = ultimo_id + 1
+
     nuevoEnvio = {
-        'id': len(usuario_actual['envios']) + 1,
+        'id': nuevo_id,
         'origen': comuna_origen,
         'destino': destino,
         'peso': peso,
@@ -133,21 +155,22 @@ def crearEnvio():
     }
 
     usuario_actual['envios'].append(nuevoEnvio)
-
     usuarios = cargarUsuarios()
-    for u in usuarios:
-        if u["nombre"] == usuario_actual["nombre"]:
-            u["envios"] = usuario_actual["envios"]
+    
+
+    usuarios = [
+        {**usuario, "envios": usuario_actual["envios"]} if usuario["nombre"] == usuario_actual["nombre"] else usuario
+        for usuario in usuarios
+    ]
+    
     guardarUsuarios(usuarios)
+    actualizar_id(nuevo_id) 
+    
 
     messagebox.showinfo("Éxito", f"Envío a comuna {destino} creado correctamente. Costo del envío: ${costo_envio}")
 
 
 def verEnvios():
-    if usuario_actual is None:
-        messagebox.showerror("Error", "Debes iniciar sesión para ver los envíos.")
-        return
-
     usuarios = cargarUsuarios()
     if usuario_actual["rol"] == "admin":
         envios_text = ""
@@ -265,6 +288,18 @@ def mostrarVentanaPrincipal():
 ventana_bienvenida = tk.Tk()
 ventana_bienvenida.title("Inicio de Sesión")
 ventana_bienvenida.geometry("300x200")
+tk.Button(ventana_bienvenida, text="Registrar", command=registrarUsuario, width=30).pack(pady=10)
+tk.Button(ventana_bienvenida, text="Iniciar Sesión", command=login, width=30).pack(pady=10)
+ventana_bienvenida.mainloop()
+
+
+
+ventana_bienvenida = tk.Tk()
+ventana_bienvenida.title("Inicio de Sesión")
+ventana_bienvenida.geometry("300x200")
+tk.Button(ventana_bienvenida, text="Registrar", command=registrarUsuario, width=30).pack(pady=10)
+tk.Button(ventana_bienvenida, text="Iniciar Sesión", command=login, width=30).pack(pady=10)
+ventana_bienvenida.mainloop()
 tk.Button(ventana_bienvenida, text="Registrar", command=registrarUsuario, width=30).pack(pady=10)
 tk.Button(ventana_bienvenida, text="Iniciar Sesión", command=login, width=30).pack(pady=10)
 ventana_bienvenida.mainloop()
