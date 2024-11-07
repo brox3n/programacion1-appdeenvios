@@ -72,7 +72,7 @@ def login():
 
 def crearEnvio():
     destino = 0
-    while destino not in range(1, 16):  # Rango 1 a 15
+    while destino not in range(1, 16):
         try:
             destino = int(simpledialog.askstring("Destino", "¿A qué comuna desea enviar el paquete?"))
             if destino not in range(1, 16):
