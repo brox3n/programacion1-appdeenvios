@@ -235,7 +235,13 @@ def validarFecha(fecha):
 
 
 def verEquipo():
-    messagebox.showinfo("Equipo de Desarrollo", "App creada por el equipo de desarrollo.")
+    equipo = "Bruno Forastiero\nSantiago Peralta\nFrancisco Pettis\nPedro Marzano"
+    messagebox.showinfo("Equipo", equipo)
+
+def descripcionProyecto():
+    descripcion = ("Esta es una app de envíos realizada por estudiantes de la UADE.\n"
+                   "Permite gestionar el envío de paquetes y controlar los registros de envíos.")
+    messagebox.showinfo("Descripción del Proyecto", descripcion)
 
 
 def mostrarVentanaPrincipal():
@@ -249,6 +255,7 @@ def mostrarVentanaPrincipal():
         tk.Button(app, text="Eliminar Envío", command=eliminarEnvio, width=30).pack(pady=5)
     tk.Button(app, text="Modificar Comuna", command=modificarUsuario, width=30).pack(pady=5)
     tk.Button(app, text="Ver Equipo", command=verEquipo, width=30).pack(pady=5)
+    tk.Button(app, text="Descripción del Proyecto", command=descripcionProyecto, width=30).pack(pady=5)
     tk.Button(app, text="Salir", command=app.destroy, width=30).pack(pady=5)
 
     app.mainloop()
