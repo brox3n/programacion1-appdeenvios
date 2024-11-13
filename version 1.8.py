@@ -108,9 +108,6 @@ def obtener_ultimo_id():
 
     return ultimo_id
 
-def actualizar_id(nuevo_id):
-    with open(archivo_id, "w") as file:
-        file.write(str(nuevo_id))
 
 def crearEnvio():
     destino = 0
@@ -164,7 +161,7 @@ def crearEnvio():
     ]
     
     guardarUsuarios(usuarios)
-    actualizar_id(nuevo_id) 
+
     
 
     messagebox.showinfo("Éxito", f"Envío a comuna {destino} creado correctamente. Costo del envío: ${costo_envio}")
